@@ -1,0 +1,29 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: jdk-17.0.11
+    commands:
+      - echo Installing Maven...
+      - curl -sL https://d1uj6qtbmh3dt5.cloudfront.net/apache-maven-3.8.6-bin.tar.gz -o maven.tar.gz
+      - tar xzf maven.tar.gz
+      - export M2_HOME=$PWD/apache-maven-3.8.6
+      - export PATH=$M2_HOME/bin:$PATH
+      - mvn --version
+  pre_build:
+    commands:
+      - echo Setting up environment...
+      - mvn clean install
+  build:
+    commands:
+      - echo Building the project...
+      - mvn package
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - mv target/*.jar output/
+artifacts:
+  files:
+    - output/*.jar
+  discard-paths: yes
